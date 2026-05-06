@@ -317,6 +317,14 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
 
+app.get("/", (_req, res) => {
+  res.json({
+    service: "salesforce-validation-toggle-server",
+    ok: true,
+    health: "/health",
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
