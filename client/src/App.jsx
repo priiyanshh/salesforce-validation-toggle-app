@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const buildApiUrl = (path) => `${API_BASE_URL}${path}`;
+
 function App() {
   const [connected, setConnected] = useState(false);
   const [rules, setRules] = useState([]);
@@ -21,7 +24,7 @@ function App() {
 
   async function fetchAuthStatus() {
     try {
-      const response = await fetch("/auth/status", {
+      const response = await fetch(buildApiUrl("/auth/status"), {
         credentials: "include",
       });
       const data = await response.json();
@@ -38,7 +41,7 @@ function App() {
     setError("");
 
     try {
-      const response = await fetch("/api/validation-rules", {
+      const response = await fetch(buildApiUrl("/api/validation-rules"), {
         credentials: "include",
       });
       const data = await response.json();
@@ -77,12 +80,12 @@ function App() {
   async function handleLogin() {
     setIsLoggingIn(true);
     try {
-      const health = await fetch("/health", { credentials: "include" });
+      const health = await fetch(buildApiUrl("/health"), { credentials: "include" });
       if (!health.ok) {
         throw new Error("Backend is not reachable.");
       }
 
-      const loginResponse = await fetch("/auth/login-url", {
+      const loginResponse = await fetch(buildApiUrl("/auth/login-url"), {
         credentials: "include",
       });
       const loginData = await loginResponse.json();
@@ -118,7 +121,7 @@ function App() {
 
     try {
       setIsDeploying(true);
-      const response = await fetch("/api/deploy", {
+      const response = await fetch(buildApiUrl("/api/deploy"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
